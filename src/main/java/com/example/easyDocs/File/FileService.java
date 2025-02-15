@@ -1,7 +1,5 @@
 package com.example.easyDocs.File;
 
-import com.example.easyDocs.User.User;
-
 public class FileService {
 
     FileMapper fileMapper;
