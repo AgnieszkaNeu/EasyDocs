@@ -1,4 +1,4 @@
-package com.example.easyDocs.File;
+package com.example.easyDocs.Document;
 
 import com.example.easyDocs.User.User;
 import jakarta.persistence.*;
@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-public class File {
+public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,24 @@ public class File {
 
     String description;
 
-    public File() {
+    public Document() {
+    }
+
+    public Document(String name, String fileType, User creator, LocalDate creation_date, String file_path, String description) {
+        this.name = name;
+        this.fileType = fileType;
+        this.creator = creator;
+        this.creation_date = creation_date;
+        this.file_path = file_path;
+        this.description = description;
+    }
+
+    public Document(String name, String fileType, User creator, LocalDate creation_date, String file_path) {
+        this.name = name;
+        this.fileType = fileType;
+        this.creator = creator;
+        this.creation_date = creation_date;
+        this.file_path = file_path;
     }
 
     public Long getId() {
