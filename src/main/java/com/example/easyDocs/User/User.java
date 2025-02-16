@@ -1,6 +1,6 @@
 package com.example.easyDocs.User;
 
-import com.example.easyDocs.File.File;
+import com.example.easyDocs.Document.Document;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -39,7 +39,7 @@ public class User {
     LocalDate user_creation_date;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
-    List<File> files = new ArrayList<>();
+    List<Document> files = new ArrayList<>();
 
     public User() {
     }
@@ -135,11 +135,11 @@ public class User {
         this.description = description;
     }
 
-    public List<File> getFiles() {
+    public List<Document> getFiles() {
         return files;
     }
 
-    public void setFiles(List<File> files) {
+    public void setFiles(List<Document> files) {
         this.files = files;
     }
 }
