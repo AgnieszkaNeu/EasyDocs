@@ -1,11 +1,13 @@
 package com.example.easyDocs;
 
-import com.example.easyDocs.exceptions.FileNotFoundException;
+import com.example.easyDocs.exceptions.DocumentException;
 import com.example.easyDocs.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import javax.print.Doc;
 
 @ControllerAdvice
 public class GlobalExceptionController {
@@ -15,8 +17,8 @@ public class GlobalExceptionController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 
-    @ExceptionHandler(FileNotFoundException.class)
-    public ResponseEntity<String> handleFileNotFoundException(FileNotFoundException exception){
+    @ExceptionHandler(DocumentException.class)
+    public ResponseEntity<String> handleFileNotFoundException(DocumentException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }
