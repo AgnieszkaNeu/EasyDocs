@@ -16,7 +16,7 @@ public class Document {
     String name;
 
     @Column(nullable = false)
-    String fileType;
+    String file_type;
 
     @ManyToOne()
     @JoinColumn(name = "user_id", nullable = false)
@@ -34,7 +34,7 @@ public class Document {
 
     public Document(String name, String fileType, User creator, LocalDate creation_date, String file_path, String description) {
         this.name = name;
-        this.fileType = fileType;
+        this.file_type = fileType;
         this.creator = creator;
         this.creation_date = creation_date;
         this.file_path = file_path;
@@ -43,7 +43,7 @@ public class Document {
 
     public Document(String name, String fileType, User creator, LocalDate creation_date, String file_path) {
         this.name = name;
-        this.fileType = fileType;
+        this.file_type = fileType;
         this.creator = creator;
         this.creation_date = creation_date;
         this.file_path = file_path;
@@ -65,12 +65,12 @@ public class Document {
         this.name = name;
     }
 
-    public String getFileType() {
-        return fileType;
+    public String getFile_type() {
+        return file_type;
     }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
+    public void setFile_type(String fileType) {
+        this.file_type = fileType;
     }
 
     public LocalDate getCreation_date() {
