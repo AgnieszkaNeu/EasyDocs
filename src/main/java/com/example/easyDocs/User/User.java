@@ -1,6 +1,7 @@
 package com.example.easyDocs.User;
 
 import com.example.easyDocs.Document.Document;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -38,7 +39,7 @@ public class User {
     @Column(nullable = false)
     LocalDate user_creation_date;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Document> files = new ArrayList<>();
 
     public User() {

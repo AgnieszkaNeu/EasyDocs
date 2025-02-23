@@ -18,34 +18,53 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
+    @GetMapping("/document")
+    public ResponseEntity<List<DocumentDto>>getDocuments(
+            @RequestParam(value = "documentName", required = false, defaultValue = "") String documentName){
 
-    @GetMapping("/documentDto/{id}")
+        List<DocumentDto> documents;
+
+        if(documentName.isBlank()) {
+            documents = documentService.getDocuments();
+        } else {
+            documents = documentService.getDocumentsByName(documentName);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(documents);
+    }
+
+    @GetMapping("/document/{id}")
     public ResponseEntity<DocumentDto> getDocumentById(@PathVariable Long id){
         DocumentDto document = documentService.getDocumentById(id);
         return ResponseEntity.status(HttpStatus.OK).body(document);
     }
 
-    @GetMapping("/documentDto")
-    public ResponseEntity<List<DocumentDto>> getDocumentsByName(@RequestParam("documentName") String documentName){
-        List<DocumentDto> documents = documentService.getDocumentsByName(documentName);
+    @PostMapping("/document")
+    public ResponseEntity<HttpStatus> uploadDocument(@RequestParam("file")MultipartFile file, Authentication authentication){
+        documentService.uploadDocument(file, authentication);
+        return  ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/document/{id}")
+    public ResponseEntity<HttpStatus> deleteDocument(@PathVariable Long id){
+        documentService.deleteDocument(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PatchMapping("/document/{id}")
+    public ResponseEntity<HttpStatus> updateDocument(@PathVariable Long id, @RequestBody Document document){
+        documentService.updateDocument(id,document);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/documentByCreator")
+    public ResponseEntity<List<DocumentDto>> getDocumentsByCreator(@RequestParam("user_id") Long creator_id){
+        List<DocumentDto> documents = documentService.getDocumentsByCreator(creator_id);
         return ResponseEntity.status(HttpStatus.OK).body(documents);
     }
-/*
-    @GetMapping("/file")
-    public ResponseEntity<List<DocumentDto>> getDocumentsByCreator(@RequestParam("user_name") String name){
-        List<DocumentDto> documents = documentService.getDocumentsByName(name);
-        return ResponseEntity.status(HttpStatus.OK).body(documents);
-    }*/
 
-    @GetMapping("/document/{id}")
+    @GetMapping("/documentResource/{id}")
     public ResponseEntity<Resource> getDocumentAsResource(@PathVariable Long id){
         Resource resource = documentService.getDocumentAsResource(id);
         return ResponseEntity.ok(resource);
-    }
-
-    @PostMapping("/file")
-    public ResponseEntity<HttpStatus> uploadFile(@RequestParam("file")MultipartFile file, Authentication authentication){
-        documentService.uploadDocument(file, authentication);
-        return  ResponseEntity.status(HttpStatus.OK).build();
     }
 }

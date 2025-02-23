@@ -22,12 +22,14 @@ public class Document {
     @JoinColumn(name = "user_id", nullable = false)
     User creator;
 
-    LocalDate creation_date;
+    LocalDate creation_date = LocalDate.now();
 
     @Column(nullable = false)
     String file_path;
 
     String description;
+
+    LocalDate lastUpdate = LocalDate.now();
 
     public Document() {
     }
@@ -41,11 +43,10 @@ public class Document {
         this.description = description;
     }
 
-    public Document(String name, String fileType, User creator, LocalDate creation_date, String file_path) {
+    public Document(String name, String fileType, User creator, String file_path) {
         this.name = name;
         this.file_type = fileType;
         this.creator = creator;
-        this.creation_date = creation_date;
         this.file_path = file_path;
     }
 
@@ -103,5 +104,13 @@ public class Document {
 
     public void setCreator(User createdBy) {
         this.creator = createdBy;
+    }
+
+    public LocalDate getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(LocalDate lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

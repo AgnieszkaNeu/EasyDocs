@@ -30,22 +30,41 @@ public class DocumentService {
         this.userRepository = userRepository;
     }
 
+    public List<DocumentDto> getDocuments() {
+        return documentRepository.findAll().stream()
+                .map(document -> documentMapper.documentToDocumentDto(document))
+                .collect(Collectors.toList());
+    }
+
     public DocumentDto getDocumentById(Long id){
         Document file = documentRepository.findById(id).orElse(new Document());
-        return documentMapper.dicumentToDocumentDto(file);
+        return documentMapper.documentToDocumentDto(file);
     }
 
     public List<DocumentDto> getDocumentsByName(String name){
         List<Document> documents = documentRepository.findAllByName(name);
         return documents
                 .stream()
-                .map(document -> documentMapper.dicumentToDocumentDto(document))
+                .map(document -> documentMapper.documentToDocumentDto(document))
                 .collect(Collectors.toList());
+    }
+
+    public void deleteDocument(Long id) {
+        Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
+        documentRepository.delete(document);
     }
 
     public Resource getDocumentAsResource(Long id){
         Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
         return documentStorageService.getDocumentAsResource(document.getFile_path());
+    }
+
+    public List<DocumentDto> getDocumentsByCreator(Long creator_id){
+        User user = userRepository.findById(creator_id).orElseThrow(() -> new UserNotFoundException(creator_id));
+        List<Document> documents = documentRepository.findAllByCreator(user);
+        return documents.stream()
+                .map(document -> documentMapper.documentToDocumentDto(document))
+                .collect(Collectors.toList());
     }
 
     public void uploadDocument(MultipartFile multipartFile, Authentication authentication){
@@ -73,10 +92,25 @@ public class DocumentService {
                 name,
                 file_type,
                 user,
-                LocalDate.now(),
                 savedFile.getPath()
         );
 
         documentRepository.save(document);
+    }
+
+    public void updateDocument(Long id, Document document) {
+        Document documentUpdate = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
+        boolean documentChanged = false;
+
+        if(document.getName()!=null){
+            documentUpdate.setName(document.getName());
+            documentChanged = true;
+        }
+        if(document.getDescription()!=null){
+            documentUpdate.setDescription(document.getDescription());
+            documentChanged = true;
+        }
+        if(documentChanged){documentUpdate.setLastUpdate(LocalDate.now());}
+        documentRepository.save(documentUpdate);
     }
 }
