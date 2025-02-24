@@ -45,10 +45,11 @@ To access protected endpoints, obtain a token by logging in via /auth/login and 
 ## Available endpoints
 | methods  | Endpoint      | Description                        | Authorisation
 |---------|---------------|------------------------------------|---------------|
-| GET, POST     |/user   |Retrieve all users or add a new user | Permit all
-| GET, PATCH,PUT,DELETE     |/user/{id}  | Retrieve, update, or delete a user by ID    | Permit all
-| GET |/document |Retrieve all documents or filter by name using documentName parameter | authenticated
-| GET, PATCH,PUT,DELETE | /document/{id} | Retrieve, update, or delete a document by ID| authenticated
-| POST | /document |Add a new document| authenticated
-| GET | /documentByCreator |Retrieve all documents created by a user using creator_id parameter| authenticated
-| GET | /documentResource/{id} |Retrieve a document resource by ID | authenticated
+| GET, POST     |/user   |Retrieve all users or add a new user | Authenticated
+| GET, PATCH,PUT,DELETE     |/user/{id}  | Retrieve, update, or delete a user by ID    | Authenticated
+| GET |/document |Retrieve all documents or filter by name using documentName parameter | Admin
+| GET |/document/allDocuments |Retrieve all documents or filter by name using documentName parameter | Authenticated
+| GET, PATCH,PUT,DELETE | /document/{id} | Retrieve, update, or delete a document by ID| Authenticated
+| POST | /document |Add a new document| Authenticated
+| GET | /document/documentByCreator |Retrieve all documents created by a user using creator_id parameter| Authenticated
+| GET | /ocument/documentResource/{id} |Retrieve a document resource by ID | Authenticated
