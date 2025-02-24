@@ -1,5 +1,6 @@
 package com.example.easyDocs.User;
 
+import com.example.easyDocs.AccessGroup.AccessGroup;
 import com.example.easyDocs.Document.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -7,6 +8,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_user")
@@ -40,7 +42,10 @@ public class User {
     LocalDate user_creation_date;
 
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<Document> files = new ArrayList<>();
+    Set<Document> files;
+
+    @ManyToMany(mappedBy = "users")
+    Set<AccessGroup> groups;
 
     public User() {
     }
@@ -136,11 +141,19 @@ public class User {
         this.description = description;
     }
 
-    public List<Document> getFiles() {
+    public Set<Document> getFiles() {
         return files;
     }
 
-    public void setFiles(List<Document> files) {
+    public void setFiles(Set<Document> files) {
         this.files = files;
+    }
+
+    public Set<AccessGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<AccessGroup> groups) {
+        this.groups = groups;
     }
 }

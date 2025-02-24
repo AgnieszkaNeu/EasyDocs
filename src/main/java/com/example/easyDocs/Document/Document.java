@@ -1,9 +1,11 @@
 package com.example.easyDocs.Document;
 
+import com.example.easyDocs.AccessGroup.AccessGroup;
 import com.example.easyDocs.User.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 public class Document {
@@ -30,6 +32,12 @@ public class Document {
     String description;
 
     LocalDate lastUpdate = LocalDate.now();
+
+    @ManyToMany(mappedBy = "documents")
+    Set<AccessGroup> groups;
+
+    @Column(nullable = false)
+    Boolean is_public = false;
 
     public Document() {
     }
@@ -112,5 +120,21 @@ public class Document {
 
     public void setLastUpdate(LocalDate lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public Set<AccessGroup> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<AccessGroup> groups) {
+        this.groups = groups;
+    }
+
+    public Boolean getPublic() {
+        return is_public;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        is_public = aPublic;
     }
 }
