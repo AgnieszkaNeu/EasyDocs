@@ -45,9 +45,9 @@ To access protected endpoints, obtain a token by logging in via /auth/login and 
 ## Available endpoints
 | methods  | Endpoint      | Description                        | Authorisation
 |---------|---------------|------------------------------------|---------------|
-| GET, POST     |/user   |Retrieve all users or add a new user | Authenticated
-| GET, PATCH,PUT,DELETE     |/user/{id}  | Retrieve, update, or delete a user by ID    | Authenticated
-| GET |/document |Retrieve all documents or filter by name using documentName parameter | Admin
+| GET, POST     |/user   |Retrieve all users or add a new user | Admin
+| GET, PATCH,PUT,DELETE     |/user/{id}  | Retrieve, update, or delete a user by ID    | Admin
+| GET |/document |Retrieve all documents or filter by name using documentName parameter | Authenticated
 | GET |/document/allDocuments |Retrieve all documents or filter by name using documentName parameter | Authenticated
 | GET, PATCH,PUT,DELETE | /document/{id} | Retrieve, update, or delete a document by ID| Authenticated
 | POST | /document |Add a new document| Authenticated
