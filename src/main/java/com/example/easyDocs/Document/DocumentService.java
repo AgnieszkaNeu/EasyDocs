@@ -1,7 +1,6 @@
 package com.example.easyDocs.Document;
 
 import com.example.easyDocs.AccessGroup.AccessGroupRepository;
-import com.example.easyDocs.AccessGroup.AccessGroupService;
 import com.example.easyDocs.User.User;
 import com.example.easyDocs.User.UserRepository;
 import com.example.easyDocs.exceptions.AccessException;
@@ -28,12 +27,10 @@ public class DocumentService {
     DocumentStorageService documentStorageService;
     UserRepository userRepository;
     List<String> supported_files = List.of("txt", "doc", "docx", "pdf");
-    AccessGroupService accessGroupService;
     AccessGroupRepository accessGroupRepository;
 
     public DocumentService(DocumentMapper documentMapper, DocumentRepository documentRepository,
                            DocumentStorageService documentStorageService, UserRepository userRepository,
-                           AccessGroupService accessGroupService,
                            AccessGroupRepository accessGroupRepository){
 
 
@@ -41,7 +38,6 @@ public class DocumentService {
         this.documentRepository = documentRepository;
         this.documentStorageService = documentStorageService;
         this.userRepository = userRepository;
-        this.accessGroupService = accessGroupService;
         this.accessGroupRepository = accessGroupRepository;
     }
 
