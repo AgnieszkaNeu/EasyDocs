@@ -2,7 +2,6 @@ package com.example.easyDocs.User;
 
 import com.example.easyDocs.AccessGroup.AccessGroup;
 import com.example.easyDocs.Document.Document;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
