@@ -24,16 +24,5 @@ public class AccessGroupService {
         this.userRepository = userRepository;
     }
 
-    public boolean haveAccess(Document document, User user){
-        Set<AccessGroup> userGroups = user.getGroups();
-        for(AccessGroup accessGroup: userGroups){
-            Set<Document> documents = accessGroup.getDocuments();
-            for(Document doc: documents){
-                if (Objects.equals(doc, document)){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
+
 }

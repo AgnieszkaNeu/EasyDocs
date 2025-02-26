@@ -1,6 +1,5 @@
 package com.example.easyDocs.config;
 
-import com.example.easyDocs.User.User;
 import com.example.easyDocs.User.UserRepository;
 import com.example.easyDocs.exceptions.UserNotFoundException;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,15 +20,6 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     @Cacheable(value = "users", key = "#email")
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
-
-        System.out.println("Role: " + user.getRole());
-
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole())
-                .build();
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
     }
 }

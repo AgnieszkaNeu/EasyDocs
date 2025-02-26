@@ -20,19 +20,19 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @GetMapping("/allDocuments")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<DocumentDto>> getAllDocuments (){
-        List<DocumentDto> documents = documentService.getDocuments();
-        return ResponseEntity.status(HttpStatus.OK).body(documents);
-    }
 
     @GetMapping("/")
     public ResponseEntity<List<DocumentDto>>getDocuments(
             @RequestParam(value = "documentName", required = false, defaultValue = "") String documentName,
             Authentication authentication){
 
-        List<DocumentDto> documents = documentService.getDocumentsByName(documentName,authentication);
+        List<DocumentDto> documents;
+
+        if(documentName.isBlank()){
+            documents = documentService.getDocuments(authentication);
+        } else {
+            documents = documentService.getDocumentsByName(documentName, authentication);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(documents);
     }
 

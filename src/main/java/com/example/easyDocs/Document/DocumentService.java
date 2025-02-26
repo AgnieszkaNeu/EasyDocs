@@ -1,5 +1,6 @@
 package com.example.easyDocs.Document;
 
+import com.example.easyDocs.AccessGroup.AccessGroupRepository;
 import com.example.easyDocs.AccessGroup.AccessGroupService;
 import com.example.easyDocs.User.User;
 import com.example.easyDocs.User.UserRepository;
@@ -15,6 +16,7 @@ import java.io.File;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,39 +29,49 @@ public class DocumentService {
     UserRepository userRepository;
     List<String> supported_files = List.of("txt", "doc", "docx", "pdf");
     AccessGroupService accessGroupService;
+    AccessGroupRepository accessGroupRepository;
 
     public DocumentService(DocumentMapper documentMapper, DocumentRepository documentRepository,
                            DocumentStorageService documentStorageService, UserRepository userRepository,
-                           AccessGroupService accessGroupService){
+                           AccessGroupService accessGroupService,
+                           AccessGroupRepository accessGroupRepository){
+
 
         this.documentMapper = documentMapper;
         this.documentRepository = documentRepository;
         this.documentStorageService = documentStorageService;
         this.userRepository = userRepository;
         this.accessGroupService = accessGroupService;
+        this.accessGroupRepository = accessGroupRepository;
     }
 
     public User getAuthenticatedUser(Authentication authentication){
-        String email = authentication.getName();
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+        return (User) authentication.getPrincipal();
     }
 
-    public List<DocumentDto> getDocuments() {
-        return documentRepository.findAll().stream()
+    public List<DocumentDto> getDocuments(Authentication authentication) {
+
+        User user = getAuthenticatedUser(authentication);
+        if (Objects.equals(user.getRole(), "ADMIN")) {
+            return documentRepository.findAll().stream()
+                    .map(document -> documentMapper.documentToDocumentDto(document))
+                    .collect(Collectors.toList());
+        }
+        Set<Document> documents = accessGroupRepository.findAllWithAccess(user.getId());
+        return documents.stream()
                 .map(document -> documentMapper.documentToDocumentDto(document))
                 .collect(Collectors.toList());
     }
 
     public DocumentDto getDocumentById(Long id, Authentication authentication){
-        Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
 
-        User user = getAuthenticatedUser(authentication);
+        User user = this.getAuthenticatedUser(authentication);
 
-        if(accessGroupService.haveAccess(document, user) || user.getRole().equals("ADMIN")){
+        if(user.getRole().equals("ADMIN")){
+            Document document =  documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
             return documentMapper.documentToDocumentDto(document);
-        } else {
-            throw new AccessException();
         }
+        return documentMapper.documentToDocumentDto(accessGroupRepository.findByDocumentId(user.getId(),id));
     }
 
     public List<DocumentDto> getDocumentsByName(String name,Authentication authentication){
@@ -70,7 +82,7 @@ public class DocumentService {
         Set<Document> haveAccessDocuments = new HashSet<>();
 
         for(Document document: documents){
-            if(accessGroupService.haveAccess(document, user) || user.getRole().equals("ADMIN")){
+            if(documents.contains(document)|| user.getRole().equals("ADMIN")){
                 haveAccessDocuments.add(document);
             }
         }
@@ -94,10 +106,12 @@ public class DocumentService {
     }
 
     public Resource getDocumentAsResource(Long id, Authentication authentication){
+
         Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
         User user = getAuthenticatedUser(authentication);
+        Set<Document> documents = accessGroupRepository.findAllWithAccess(user.getId());
 
-        if(accessGroupService.haveAccess(document, user) || user.getRole().equals("ADMIN")) {
+        if(documents.contains(document) || user.getRole().equals("ADMIN")) {
             return documentStorageService.getDocumentAsResource(document.getFile_path());
         } else {
             throw new AccessException();
@@ -110,9 +124,10 @@ public class DocumentService {
 
         Set<Document> documents = documentRepository.findAllByCreator(creator);
         Set<Document> haveAccessDocuments = new HashSet<>();
+        Set<Document> documentsSharedToUser = accessGroupRepository.findAllWithAccess(user.getId());
 
         for(Document document: documents){
-            if(accessGroupService.haveAccess(document, user) || user.getRole().equals("ADMIN")){
+            if(documentsSharedToUser.contains(document) || user.getRole().equals("ADMIN")){
                 haveAccessDocuments.add(document);
             }
         }
