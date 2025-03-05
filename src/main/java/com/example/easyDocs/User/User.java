@@ -44,8 +44,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Document> files;
 
-    @ManyToMany(mappedBy = "users")
-    Set<AccessGroup> groups;
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    Set<AccessGroup> groupsBelongTo;
+
+    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<AccessGroup> groupsInitiator;
 
     public User() {
     }
@@ -159,11 +162,19 @@ public class User implements UserDetails {
         this.files = files;
     }
 
-    public Set<AccessGroup> getGroups() {
-        return groups;
+    public Set<AccessGroup> getGroupsBelongTo() {
+        return groupsBelongTo;
     }
 
-    public void setGroups(Set<AccessGroup> groups) {
-        this.groups = groups;
+    public void setGroupsBelongTo(Set<AccessGroup> groups) {
+        this.groupsBelongTo = groups;
+    }
+
+    public Set<AccessGroup> getGroupsInitiator() {
+        return groupsInitiator;
+    }
+
+    public void setGroupsInitiator(Set<AccessGroup> groupsInitiator) {
+        this.groupsInitiator = groupsInitiator;
     }
 }

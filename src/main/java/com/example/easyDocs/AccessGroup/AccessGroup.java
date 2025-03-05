@@ -2,6 +2,7 @@ package com.example.easyDocs.AccessGroup;
 
 import com.example.easyDocs.Document.Document;
 import com.example.easyDocs.User.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -17,24 +18,27 @@ public class AccessGroup {
     @Column(nullable = false)
     String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "document_group_access",
             joinColumns = @JoinColumn(name = "group_access_id"),
             inverseJoinColumns = @JoinColumn(name = "document_id")
     )
+    @JsonIgnore
     Set<Document> documents = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany()
     @JoinTable(
             name = "user_group_access",
             joinColumns = @JoinColumn(name = "group_access_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonIgnore
     Set<User> users = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     User initiator;
 
     public AccessGroup(Long id, String name, Set<Document> documents, Set<User> users, User initiator) {

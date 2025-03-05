@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     UserService userService;
@@ -18,44 +19,44 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user")
+    @GetMapping("/")
     public ResponseEntity<List<UserDto>> returnUsers(){
         List<UserDto> users = userService.returnUsers();
         return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<UserDto> returnUsersById(@PathVariable Long id){
         UserDto userDto = userService.returnUserById(id);
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
-    @PostMapping("/user")
+    @PostMapping("/")
     public ResponseEntity<UserDto> addUser(@RequestBody User user){
         User savedUser = userService.addUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @PatchMapping("/user/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> patchUpdateUser(@PathVariable Long id, @RequestBody User user){
         userService.patchUpdateUser(id,user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<HttpStatus> putUpdateUser(@PathVariable Long id, @RequestBody User user){
         userService.putUpdateUser(id,user);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @DeleteMapping("/user/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/user/changeToAdmin/{id}")
+    @GetMapping("/changeToAdmin/{id}")
     public ResponseEntity<HttpStatus> changeUserToAdmin(@PathVariable Long id) {
         userService.changeUserToAdmin(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

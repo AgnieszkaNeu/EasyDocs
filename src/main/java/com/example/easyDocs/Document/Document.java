@@ -33,7 +33,7 @@ public class Document {
 
     LocalDate lastUpdate = LocalDate.now();
 
-    @ManyToMany(mappedBy = "documents")
+    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY)
     Set<AccessGroup> groups;
 
     @Column(nullable = false)
