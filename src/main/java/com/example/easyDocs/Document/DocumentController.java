@@ -20,7 +20,7 @@ public class DocumentController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<DocumentDto>>getDocuments(
             @RequestParam(value = "documentName", required = false, defaultValue = "") String documentName,
             Authentication authentication){
@@ -41,7 +41,7 @@ public class DocumentController {
         return ResponseEntity.status(HttpStatus.OK).body(document);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<HttpStatus> uploadDocument(@RequestParam("file")MultipartFile file, Authentication authentication){
         documentService.uploadDocument(file, authentication);
         return  ResponseEntity.status(HttpStatus.OK).build();

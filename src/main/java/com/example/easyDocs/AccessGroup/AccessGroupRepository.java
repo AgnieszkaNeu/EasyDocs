@@ -36,4 +36,7 @@ public interface AccessGroupRepository extends JpaRepository<AccessGroup,Long> {
     @Query(value = "INSERT INTO document_group_access (document_id , group_access_id) VALUES ( :document_id, :group_id)"
             , nativeQuery = true)
     void addDocument(@Param("document_id") Long document_id, @Param("group_id") Long group_id);
+
+    @Query(value = "SELECT group_access_id FROM user_group_access WHERE user_id = :user_id", nativeQuery = true)
+    Set <Long> findGroupsUserBelongTo(@Param("user_id") Long user_id);
 }

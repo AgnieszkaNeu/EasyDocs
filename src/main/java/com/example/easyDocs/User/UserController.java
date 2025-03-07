@@ -2,6 +2,8 @@ package com.example.easyDocs.User;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -19,7 +21,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<UserDto>> returnUsers(){
         List<UserDto> users = userService.returnUsers();
         return ResponseEntity.status(HttpStatus.OK).body(users);
@@ -31,7 +33,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<UserDto> addUser(@RequestBody User user){
         User savedUser = userService.addUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();
@@ -39,24 +41,19 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<HttpStatus> patchUpdateUser(@PathVariable Long id, @RequestBody User user){
-        userService.patchUpdateUser(id,user);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<HttpStatus> putUpdateUser(@PathVariable Long id, @RequestBody User user){
-        userService.putUpdateUser(id,user);
+    public ResponseEntity<HttpStatus> patchUpdateUser(@PathVariable Long id, @RequestBody User user, Authentication authentication){
+        userService.patchUpdateUser(id,user, authentication);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable Long id, Authentication authentication){
+        userService.deleteUser(id, authentication);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/changeToAdmin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<HttpStatus> changeUserToAdmin(@PathVariable Long id) {
         userService.changeUserToAdmin(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

@@ -1,12 +1,18 @@
 package com.example.easyDocs.AccessGroup;
 
+import com.example.easyDocs.User.User;
 import com.example.easyDocs.exceptions.AccessException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccessGroupService {
 
     AccessGroupRepository accessGroupRepository;
+
+    public User getAuthenticatedUser(Authentication authentication){
+        return (User) authentication.getPrincipal();
+    }
 
     public AccessGroupService(AccessGroupRepository accessGroupRepository) {
         this.accessGroupRepository = accessGroupRepository;
@@ -16,7 +22,9 @@ public class AccessGroupService {
         return accessGroupRepository.findById(id).orElseThrow(AccessException::new);
     }
 
-    public AccessGroup createGroup(AccessGroup newGroup) {
+    public AccessGroup createGroup(AccessGroup newGroup, Authentication authentication) {
+        User user = getAuthenticatedUser(authentication);
+        newGroup.setInitiator(user);
         return accessGroupRepository.save(newGroup);
     }
 

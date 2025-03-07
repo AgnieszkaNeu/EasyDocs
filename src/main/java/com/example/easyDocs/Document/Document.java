@@ -21,7 +21,7 @@ public class Document {
     String file_type;
 
     @ManyToOne()
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User creator;
 
     LocalDate creation_date = LocalDate.now();
@@ -33,7 +33,7 @@ public class Document {
 
     LocalDate lastUpdate = LocalDate.now();
 
-    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "documents", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<AccessGroup> groups;
 
     @Column(nullable = false)

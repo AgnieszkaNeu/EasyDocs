@@ -2,6 +2,7 @@ package com.example.easyDocs.AccessGroup;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -23,9 +24,9 @@ public class AccessGroupController {
         return ResponseEntity.status(HttpStatus.OK).body(accessGroup);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<AccessGroup> createGroup(@RequestBody AccessGroup newGroup){
-        AccessGroup savedGroup = accessGroupService.createGroup(newGroup);
+    @PostMapping("")
+    public ResponseEntity<AccessGroup> createGroup(@RequestBody AccessGroup newGroup, Authentication authentication){
+        AccessGroup savedGroup = accessGroupService.createGroup(newGroup, authentication);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedGroup.getId()).toUri();
         return ResponseEntity.created(location).build();
     }

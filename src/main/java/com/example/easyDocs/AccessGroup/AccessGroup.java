@@ -27,7 +27,7 @@ public class AccessGroup {
     @JsonIgnore
     Set<Document> documents = new HashSet<>();
 
-    @ManyToMany()
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_group_access",
             joinColumns = @JoinColumn(name = "group_access_id"),

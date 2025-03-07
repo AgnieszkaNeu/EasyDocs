@@ -39,12 +39,12 @@ public class User implements UserDetails {
     String description;
 
     @Column(nullable = false)
-    LocalDate user_creation_date;
+    LocalDate user_creation_date = LocalDate.now();
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     Set<Document> files;
 
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<AccessGroup> groupsBelongTo;
 
     @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -54,13 +54,12 @@ public class User implements UserDetails {
     }
 
     public User(String email, String first_name, String last_name, String password,
-                String job_title, LocalDate created_time,String phone_number) {
+                String job_title,String phone_number) {
         this.email = email;
         this.first_name = first_name;
         this.last_name = last_name;
         this.password = password;
         this.job_title = job_title;
-        this.user_creation_date = created_time;
         this.phone_number = phone_number;
     }
 

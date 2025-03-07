@@ -1,21 +1,42 @@
 package com.example.easyDocs.User;
 
+import com.example.easyDocs.AccessGroup.AccessGroup;
+import com.example.easyDocs.AccessGroup.AccessGroupRepository;
+import com.example.easyDocs.Document.Document;
+import com.example.easyDocs.Document.DocumentRepository;
+import com.example.easyDocs.exceptions.AccessException;
+import com.example.easyDocs.exceptions.AccessGroupException;
 import com.example.easyDocs.exceptions.UserNotFoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public class UserService {
 
     UserMapper userMapper;
-
     UserRepository userRepository;
+    DocumentRepository documentRepository;
+    AccessGroupRepository accessGroupRepository;
 
-    public UserService (UserMapper userMapper, UserRepository userRepository){
+    public UserService (UserMapper userMapper, UserRepository userRepository, DocumentRepository documentRepository, AccessGroupRepository accessGroupRepository){
         this.userMapper = userMapper;
         this.userRepository = userRepository;
+        this.documentRepository = documentRepository;
+        this.accessGroupRepository = accessGroupRepository;
+    }
+
+    public User getAuthenticatedUser(Authentication authentication){
+        return (User) authentication.getPrincipal();
+    }
+
+    public boolean isAdminOrOwner(User authenticated, User entity){
+        return Objects.equals(authenticated.getRole(), "ADMIN") || Objects.equals(entity.getId(), authenticated.getId());
     }
 
     public List<UserDto> returnUsers(){
@@ -34,48 +55,70 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void patchUpdateUser(Long id, User updateUser) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+    public void patchUpdateUser(Long id, User updateUser, Authentication authentication) {
+
+        User userToUpdate = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User authenticatedUser = getAuthenticatedUser(authentication);
+
+        if (!isAdminOrOwner(authenticatedUser, userToUpdate)){
+            throw new AccessException();
+        }
 
         if(updateUser.getEmail() != null){
-            user.setEmail(updateUser.getEmail());
+            userToUpdate.setEmail(updateUser.getEmail());
         }
         if(updateUser.getFirst_name() != null){
-            user.setFirst_name(updateUser.getFirst_name());
+            userToUpdate.setFirst_name(updateUser.getFirst_name());
         }
         if(updateUser.getLast_name() != null){
-            user.setLast_name(updateUser.getLast_name());
+            userToUpdate.setLast_name(updateUser.getLast_name());
         }
         if(updateUser.getPhone_number() != null){
-            user.setPhone_number(updateUser.getPhone_number());
+            userToUpdate.setPhone_number(updateUser.getPhone_number());
         }
         if(updateUser.getPassword() != null){
-            user.setPassword(updateUser.getPassword());
+            userToUpdate.setPassword(updateUser.getPassword());
         }
         if(updateUser.getJob_title() != null){
-            user.setJob_title(updateUser.getJob_title());
+            userToUpdate.setJob_title(updateUser.getJob_title());
         }
         if(updateUser.getDescription() != null){
-            user.setDescription(updateUser.getDescription());
+            userToUpdate.setDescription(updateUser.getDescription());
         }
 
-        userRepository.save(user);
+        userRepository.save(userToUpdate);
     }
 
-    public void putUpdateUser(Long id, User updateUser) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        user.setEmail(updateUser.getEmail());
-        user.setFirst_name(updateUser.getFirst_name());
-        user.setLast_name(updateUser.getLast_name());
-        user.setPassword(updateUser.getPassword());
-        user.setUser_creation_date(updateUser.getUser_creation_date());
+    public void deleteUser(Long id, Authentication authentication) {
+        User userToDelete = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        User authenricatedUser = getAuthenticatedUser(authentication);
 
-        userRepository.save(user);
-    }
+        if(!isAdminOrOwner(authenricatedUser, userToDelete)){
+            throw new AccessException();
+        }
 
-    public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        userRepository.delete(user);
+        Set<Document> documents = documentRepository.findAllByCreator(userToDelete);
+        for (Document document: documents){
+            document.setCreator(null);
+            documentRepository.save(document);
+        }
+
+        Set<Long> groups_id = accessGroupRepository.findGroupsUserBelongTo(id);
+        Set<AccessGroup>accessGroups = new HashSet<>();
+
+        for(Long group_id: groups_id){
+            AccessGroup accessGroup = accessGroupRepository.findById(group_id).orElseThrow(() -> new AccessGroupException(group_id));
+            accessGroups.add(accessGroup);
+        }
+
+        for (AccessGroup accessGroup: accessGroups){
+            Set<User> users = accessGroup.getUsers();
+            users.remove(userToDelete);
+            accessGroup.setUsers(users);
+            accessGroupRepository.save(accessGroup);
+        }
+
+        userRepository.delete(userToDelete);
     }
 
     public void changeUserToAdmin(Long id) {
