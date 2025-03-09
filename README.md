@@ -43,13 +43,13 @@ EasyDocs uses JWT (JSON Web Token) for authentication.
 To access protected endpoints, obtain a token by logging in via /auth/login and include it in requests using the Authorization: Bearer <TOKEN> header.
 
 ## Available endpoints
-| methods  | Endpoint      | Description                        | Authorisation
-|---------|---------------|------------------------------------|---------------|
-| GET, POST     |/user   |Retrieve all users or add a new user | Admin
-| GET, PATCH,PUT,DELETE     |/user/{id}  | Retrieve, update, or delete a user by ID    | Admin
-| GET |/document |Retrieve all documents or filter by name using documentName parameter | Authenticated
-| GET |/document/allDocuments |Retrieve all documents or filter by name using documentName parameter | Authenticated
-| GET, PATCH,PUT,DELETE | /document/{id} | Retrieve, update, or delete a document by ID| Authenticated
-| POST | /document |Add a new document| Authenticated
-| GET | /document/documentByCreator |Retrieve all documents created by a user using creator_id parameter| Authenticated
-| GET | /ocument/documentResource/{id} |Retrieve a document resource by ID | Authenticated
+
+/user
+| methods  | Endpoint       | Description                                  | Authorisation
+|----------|----------------|----------------------------------------------|---------------|
+| GET      |/               |Retrieve a list of all users                  |Authenticated user
+| POST     |/               |Create a new user                             |Authenticated user
+| GET      |/{id}           |Retrieve user details by ID                   |Authenticated user
+| PATCH    |/{id}           |Update user details (first name, last name, phone number, password, job title, or description) |Admin or the user themselves
+| DELETE   |/{id}          |Delete a user by ID                  | Admin or the user themselves
+| GET      |/changeToAdmin/{id} |Grant admin privileges to a user with the given ID | Admin only
