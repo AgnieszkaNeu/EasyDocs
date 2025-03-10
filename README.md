@@ -53,3 +53,15 @@ To access protected endpoints, obtain a token by logging in via /auth/login and 
 | PATCH    |/{id}           |Update user details (first name, last name, phone number, password, job title, or description) |Admin or the user themselves
 | DELETE   |/{id}          |Delete a user by ID                  | Admin or the user themselves
 | GET      |/changeToAdmin/{id} |Grant admin privileges to a user with the given ID | Admin only
+
+/document
+| methods  | Endpoint       | Description                                       | Authorisation
+|----------|----------------|---------------------------------------------------|---------------|
+| GET      |/                         |Retrieve a list of all documents         |Authenticated user
+| GET      |/?documentName=    |Retrieve a list of all with the given name      |Authenticated user
+| POST     |/                   |Upload a new document                    |Authenticated user
+| GET      |/{id}           |Retrieve document details by ID                    |Authenticated user
+| PATCH    |/{id}           |Update document details (name, description)        |Admin or owner
+| DELETE   |/{id}        |Delete a document by ID                            |Admin or owner
+| GET      |/documentByCreator/{id}   |Retrieve a list of all documents uploadet by user with given ID |Authenticated user
+|GET       |/resource/{id}            |Retrieve a resource associated with a document  |Admin, owner or user with access to the document 
