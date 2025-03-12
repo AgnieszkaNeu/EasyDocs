@@ -22,22 +22,21 @@ public class DocumentController {
 
     @GetMapping("")
     public ResponseEntity<List<DocumentDto>>getDocuments(
-            @RequestParam(value = "documentName", required = false, defaultValue = "") String documentName,
-            Authentication authentication){
+            @RequestParam(value = "documentName", required = false, defaultValue = "") String documentName){
 
         List<DocumentDto> documents;
 
         if(documentName.isBlank()){
-            documents = documentService.getDocuments(authentication);
+            documents = documentService.getDocuments();
         } else {
-            documents = documentService.getDocumentsByName(documentName, authentication);
+            documents = documentService.getDocumentsByName(documentName);
         }
         return ResponseEntity.status(HttpStatus.OK).body(documents);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DocumentDto> getDocumentById(@PathVariable Long id, Authentication authentication){
-        DocumentDto document = documentService.getDocumentById(id,authentication);
+    public ResponseEntity<DocumentDto> getDocumentById(@PathVariable Long id){
+        DocumentDto document = documentService.getDocumentById(id);
         return ResponseEntity.status(HttpStatus.OK).body(document);
     }
 
@@ -59,13 +58,13 @@ public class DocumentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("/documentByCreator")
-    public ResponseEntity<List<DocumentDto>> getDocumentsByCreator(@RequestParam("user_id") Long creator_id, Authentication authentication){
-        List<DocumentDto> documents = documentService.getDocumentsByCreator(creator_id,authentication);
+    @GetMapping("/documentByCreator/{id}")
+    public ResponseEntity<List<DocumentDto>> getDocumentsByCreator(@PathVariable Long id, Authentication authentication){
+        List<DocumentDto> documents = documentService.getDocumentsByCreator(id,authentication);
         return ResponseEntity.status(HttpStatus.OK).body(documents);
     }
 
-    @GetMapping("/documentResource/{id}")
+    @GetMapping("/resource/{id}")
     public ResponseEntity<Resource> getDocumentAsResource(@PathVariable Long id, Authentication authentication){
         Resource resource = documentService.getDocumentAsResource(id, authentication);
         return ResponseEntity.ok(resource);

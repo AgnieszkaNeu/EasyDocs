@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     String password;
 
-    String role = "USER";
+    String role = "ROLE_USER";
 
     String job_title;
 
@@ -47,7 +47,7 @@ public class User implements UserDetails {
     @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     Set<AccessGroup> groupsBelongTo;
 
-    @OneToMany(mappedBy = "initiator", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "founder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<AccessGroup> groupsInitiator;
 
     public User() {

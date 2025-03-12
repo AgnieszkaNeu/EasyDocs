@@ -39,14 +39,14 @@ public class AccessGroup {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
-    User initiator;
+    User founder;
 
-    public AccessGroup(Long id, String name, Set<Document> documents, Set<User> users, User initiator) {
+    public AccessGroup(Long id, String name, Set<Document> documents, Set<User> users, User founder) {
         this.id = id;
         this.name = name;
         this.documents = documents;
         this.users = users;
-        this.initiator = initiator;
+        this.founder = founder;
     }
 
     public AccessGroup() {
@@ -85,11 +85,11 @@ public class AccessGroup {
         this.users = users;
     }
 
-    public User getInitiator() {
-        return initiator;
+    public User getFounder() {
+        return founder;
     }
 
-    public void setInitiator(User initiator) {
-        this.initiator = initiator;
+    public void setFounder(User initiator) {
+        this.founder = initiator;
     }
 }

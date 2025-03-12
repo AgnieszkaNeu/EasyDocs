@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,45 +43,23 @@ public class DocumentService {
         return (User) authentication.getPrincipal();
     }
 
-    public List<DocumentDto> getDocuments(Authentication authentication) {
-
-        User user = getAuthenticatedUser(authentication);
-        if (Objects.equals(user.getRole(), "ADMIN")) {
-            return documentRepository.findAll().stream()
-                    .map(document -> documentMapper.documentToDocumentDto(document))
-                    .collect(Collectors.toList());
-        }
-        Set<Document> documents = accessGroupRepository.findAllWithAccess(user.getId());
-        return documents.stream()
+    public boolean isAdminOrOwner(User authenticated, Document document){
+        return authenticated.getRole().equals("ROLE_ADMIN") || document.getCreator().getId().equals(authenticated.getId());
+    }
+    public List<DocumentDto> getDocuments() {
+        return documentRepository.findAll().stream()
                 .map(document -> documentMapper.documentToDocumentDto(document))
                 .collect(Collectors.toList());
     }
 
-    public DocumentDto getDocumentById(Long id, Authentication authentication){
-
-        User user = this.getAuthenticatedUser(authentication);
-
-        if(user.getRole().equals("ADMIN")){
-            Document document =  documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
-            return documentMapper.documentToDocumentDto(document);
-        }
-        return documentMapper.documentToDocumentDto(accessGroupRepository.findByDocumentId(user.getId(),id));
+    public DocumentDto getDocumentById(Long id){
+        return documentMapper.documentToDocumentDto(
+                documentRepository.findById(id)
+                        .orElseThrow(() -> new DocumentException(id)));
     }
 
-    public List<DocumentDto> getDocumentsByName(String name,Authentication authentication){
-
-        User user = getAuthenticatedUser(authentication);
-
-        Set<Document> documents = documentRepository.findAllByName(name);
-        Set<Document> haveAccessDocuments = new HashSet<>();
-
-        for(Document document: documents){
-            if(documents.contains(document)|| user.getRole().equals("ADMIN")){
-                haveAccessDocuments.add(document);
-            }
-        }
-
-        return haveAccessDocuments
+    public List<DocumentDto> getDocumentsByName(String name){
+        return documentRepository.findAllByName(name)
                 .stream()
                 .map(document -> documentMapper.documentToDocumentDto(document))
                 .collect(Collectors.toList());
@@ -94,7 +70,7 @@ public class DocumentService {
         Document document = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
         User user = getAuthenticatedUser(authentication);
 
-        if(document.getCreator().equals(user) || user.getRole().equals("ADMIN")) {
+        if(!isAdminOrOwner(user,document)) {
             documentRepository.delete(document);
         } else {
             throw new AccessException();
@@ -107,7 +83,7 @@ public class DocumentService {
         User user = getAuthenticatedUser(authentication);
         Set<Document> documents = accessGroupRepository.findAllWithAccess(user.getId());
 
-        if(documents.contains(document) || user.getRole().equals("ADMIN")) {
+        if(documents.contains(document) || user.getRole().equals("ROLE_ADMIN")) {
             return documentStorageService.getDocumentAsResource(document.getFile_path());
         } else {
             throw new AccessException();
@@ -115,20 +91,9 @@ public class DocumentService {
     }
 
     public List<DocumentDto> getDocumentsByCreator(Long creator_id, Authentication authentication){
-        User user = getAuthenticatedUser(authentication);
         User creator = userRepository.findById(creator_id).orElseThrow(() -> new UserNotFoundException(creator_id));
 
-        Set<Document> documents = documentRepository.findAllByCreator(creator);
-        Set<Document> haveAccessDocuments = new HashSet<>();
-        Set<Document> documentsSharedToUser = accessGroupRepository.findAllWithAccess(user.getId());
-
-        for(Document document: documents){
-            if(documentsSharedToUser.contains(document) || user.getRole().equals("ADMIN")){
-                haveAccessDocuments.add(document);
-            }
-        }
-
-        return haveAccessDocuments.stream()
+        return documentRepository.findAllByCreator(creator).stream()
                 .map(document -> documentMapper.documentToDocumentDto(document))
                 .collect(Collectors.toList());
     }
@@ -139,8 +104,6 @@ public class DocumentService {
         int lastDotIndex = file_name.lastIndexOf(".");
         String file_type;
         String name;
-
-        System.out.println("File name: " + file_name);
 
         if (lastDotIndex != -1){
             file_type = file_name.substring(lastDotIndex + 1);
@@ -169,7 +132,7 @@ public class DocumentService {
         User user = getAuthenticatedUser(authentication);
         Document documentToUpdate = documentRepository.findById(id).orElseThrow(() -> new DocumentException(id));
 
-        if (!documentToUpdate.getCreator().equals(user)){
+        if (!isAdminOrOwner(user,documentToUpdate)){
             throw new AccessException();
         }
 

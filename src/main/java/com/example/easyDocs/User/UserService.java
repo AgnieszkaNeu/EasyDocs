@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class UserService {
     }
 
     public boolean isAdminOrOwner(User authenticated, User entity){
-        return Objects.equals(authenticated.getRole(), "ADMIN") || Objects.equals(entity.getId(), authenticated.getId());
+        return authenticated.getRole().equals("ROLE_ADMIN") || entity.getId().equals(authenticated.getId());
     }
 
     public List<UserDto> returnUsers(){
@@ -64,9 +63,6 @@ public class UserService {
             throw new AccessException();
         }
 
-        if(updateUser.getEmail() != null){
-            userToUpdate.setEmail(updateUser.getEmail());
-        }
         if(updateUser.getFirst_name() != null){
             userToUpdate.setFirst_name(updateUser.getFirst_name());
         }
@@ -123,7 +119,7 @@ public class UserService {
 
     public void changeUserToAdmin(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        user.setRole("ADMIN");
+        user.setRole("ROLE_ADMIN");
         userRepository.save(user);
     }
 }

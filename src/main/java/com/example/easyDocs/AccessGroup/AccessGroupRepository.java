@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.Set;
 
 public interface AccessGroupRepository extends JpaRepository<AccessGroup,Long> {
@@ -23,7 +24,7 @@ public interface AccessGroupRepository extends JpaRepository<AccessGroup,Long> {
             "JOIN user_group_access uga ON dga.group_access_id = uga.group_access_id " +
             "WHERE uga.user_id = :user_id AND dga.document_id = :document_id",
             nativeQuery = true)
-    Document findByDocumentId(@Param("user_id") Long user_id,@Param("document_id") Long document_id);
+    Optional<Document> findByDocumentId(@Param("user_id") Long user_id, @Param("document_id") Long document_id);
 
     @Modifying
     @Transactional
@@ -39,4 +40,17 @@ public interface AccessGroupRepository extends JpaRepository<AccessGroup,Long> {
 
     @Query(value = "SELECT group_access_id FROM user_group_access WHERE user_id = :user_id", nativeQuery = true)
     Set <Long> findGroupsUserBelongTo(@Param("user_id") Long user_id);
+
+    @Query(value = "SELECT dga.document_id FROM document_group_access dga JOIN user_group_access uga " +
+            "ON uga.group_access_id = dga.group_access_id " +
+            "WHERE uga.user_id = :user_id AND dga.document_id = :document_id"
+            , nativeQuery = true)
+    Long checkAccessToDocument(@Param("user_id") Long user_id, @Param("document_id") Long document_id);
+
+    @Query(value = "SELECT dga.document_id FROM document_group_access dga JOIN user_group_access uga " +
+            "ON uga.group_access_id = dga.group_access_id " +
+            "WHERE uga.user_id = :user_id",
+            nativeQuery = true)
+    Set<Long> findAllDocumentsIdByAccess(Long user_id);
+
 }
