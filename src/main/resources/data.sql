@@ -90,65 +90,12 @@ INSERT INTO app_user (email, first_name, last_name, password, role, job_title, p
      'Monitors and ensures IT security within the company.',
      '2022-08-14');
 
-
-INSERT INTO document (name, file_type, user_id, creation_date, file_path, description, is_public) VALUES
-
-    ('Work regulations 2025', 'docx', 4, '2025-01-10', 'C:\Users\agnne\uploads\Work regulations.docx',
-    'Current work regulations, including rules regarding working time, leaves and employee duties', false),
-
-    ('Marketing campaign plan for spring 2025', 'pdf', 3, '2025-01-20', 'C:\Users\agnne\uploads\Marketing campaign plan for spring 2025.pdf',
-    'Goals, assumptions and plan for a marketing campaign whose main theme will be the body positive movement', false ),
-
-    ('Procedure for accepting goods into the warehouse', 'pdf', 2, '2025-02-10', 'C:\Users\agnne\uploads\Procedure for accepting goods into the warehouse.pdf',
-    'A document describing the steps and requirements for accepting deliveries into a warehouse', false),
-
-    ('VPN configuration', 'txt', 1, '2025-02-12', 'C:\Users\agnne\uploads\Instrukcja_konfiguracji_VPN.txt',
-    'A step-by-step guide to setting up remote access to your corporate VPN for employees', false),
-
-    ('Employment contract template', 'docx', 4, '2025-01-22', 'C:\Users\agnne\uploads\Employment contract template.docx',
-    'A standard template of an employment contract used in the company for new employees', false),
-
-    ('Annual financial report 2024', 'pdf', 4, '2025-01-15', 'C:\Users\agnne\uploads\Annual financial report 2024.pdf',
-    'A detailed financial report summarizing the company’s financial performance for the year 2024', false),
-
-    ('Cybersecurity policy', 'docx', 3, '2025-02-05', 'C:\Users\agnne\\uploads\Cybersecurity policy.docx',
-    'Company policy outlining security protocols, data protection measures, and IT security best practices', false),
-
-    ('Onboarding checklist', 'xlsx', 2, '2025-01-25', 'C:\Users\agnne\uploads\Onboarding checklist.xlsx',
-    'A checklist for HR to ensure all onboarding steps are completed for new employees', false),
-
-    ('Project management guidelines', 'pdf', 7, '2025-02-08', 'C:\Users\agnne\uploads\Project management guidelines.pdf',
-    'Best practices and frameworks for managing internal projects effectively', false),
-
-    ('Salary structure overview', 'docx', 4, '2025-01-30', 'C:\Users\agnne\uploads\Salary structure overview.docx',
-    'An overview of the company’s salary ranges, including bonuses and benefits', false),
-
-    ('Employee code of conduct', 'pdf', 4, '2025-01-18', 'C:\Users\agnne\uploads\Employee code of conduct.pdf',
-    'A document specifying ethical standards, company values, and expected behavior of employees', false),
-
-    ('Warehouse safety procedures', 'pdf', 2, '2025-02-11', 'C:\Users\agnne\uploads\Warehouse safety procedures.pdf',
-    'Safety protocols for employees working in warehouses, including emergency response plans', false),
-
-    ('Remote work guidelines', 'docx', 3, '2025-01-27', 'C:\Users\agnne\uploads\Remote work guidelines.docx',
-    'A guide to remote work policies, including IT security, communication, and performance expectations', false),
-
-    ('Meeting agenda template', 'txt', 1, '2025-02-03', 'C:\Users\agnne\uploads\Meeting agenda template.txt',
-    'Integration trip plan', true);
-
-
 INSERT INTO access_group (name, user_id) VALUES
 
      ('HR Documents', 4),
      ('IT Policies & Security', 1),
      ('Remote Work Resources', 1),
      ('Marketing Campaigns', 3);
-
-INSERT INTO document_group_access (document_id , group_access_id) VALUES
-
-    (1,1), (5,1), (10,1), (11,1), (8,1),
-    (4,2), (7,2),
-    (13,3),
-    (2,4);
 
 INSERT INTO user_group_access (user_id, group_access_id) VALUES
     (5,1), (4,1),
