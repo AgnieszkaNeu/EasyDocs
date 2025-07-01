@@ -31,7 +31,7 @@ public class AccessGroupService {
     }
 
     public AccessGroup getGroupById(Long id, Authentication authentication) {
-        AccessGroup accessGroup = accessGroupRepository.findById(id).orElseThrow(AccessException::new);
+        AccessGroup accessGroup = accessGroupRepository.findById(id).orElseThrow(() -> new AccessGroupException(id));
         User user = getAuthenticatedUser(authentication);
 
         Set<User> users  = accessGroup.getUsers();

@@ -1,6 +1,7 @@
 package com.example.easyDocs;
 
 import com.example.easyDocs.exceptions.AccessException;
+import com.example.easyDocs.exceptions.AccessGroupException;
 import com.example.easyDocs.exceptions.DocumentException;
 import com.example.easyDocs.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -26,5 +27,10 @@ public class GlobalExceptionController {
     @ExceptionHandler(AccessException.class)
     public ResponseEntity<String> handleAccessDeniedException(AccessException exception){
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(AccessGroupException.class)
+    public ResponseEntity<String> handleGroupNotFoundException(AccessGroupException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
 }

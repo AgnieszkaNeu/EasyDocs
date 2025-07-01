@@ -49,7 +49,6 @@ public class AccessGroupController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<HttpStatus> updateGroup(@PathVariable Long id, @RequestBody AccessGroup accessGroup, Authentication authentication){
-        System.out.println(accessGroup.getFounder());
         accessGroupService.updateGroup(id, accessGroup, authentication);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
