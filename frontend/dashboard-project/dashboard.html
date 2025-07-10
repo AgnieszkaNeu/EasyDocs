@@ -18,30 +18,49 @@
       <a href="#">Account</a>
       <a href="#">Support</a>
     </div>
-    <button class="bg-zinc-800 p-2 rounded-full hover:bg-zinc-700 transition">
-      🌙
-    </button>
   </nav>
 
+    
+  <div class="flex flex-col items-center justify-center gap-10">
 
-  <section class="max-w-3xl mx-auto text-center">
-    <h1 class="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
-      Software designer, founder, and amateur astronaut.
-    </h1>
-    <p class="text-gray-400 mb-6">
-      I’m Spencer, a software designer and entrepreneur based in New York City...
-    </p>
 
-    <!-- Social icons -->
-    <div class="flex justify-center gap-4 text-gray-400">
-      <a href="#" class="hover:text-white">🐦</a>
-      <a href="#" class="hover:text-white">📷</a>
-      <a href="#" class="hover:text-white">🎧</a>
-      <a href="#" class="hover:text-white">💼</a>
+    <div class="w-full max-w-6xl flex flex-col gap-10">
+
+      <form 
+        id="dropFile" 
+        action="/" 
+        class="dropzone bg-white/15 backdrop-blur-md w-full p-6 rounded-md"
+      ></form>
+  
+      <div 
+        id="fileDashboardContainer"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-15"
+      ></div>
+  
     </div>
-  </section>
+  
+  </div>
 
-  <script src="../dashboard-project/js/dashboard.js"></script>
+  <div id="uploadConfirmModal" hidden>
+    <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg w-full max-w-md">
+        <h2 class="text-white text-lg font-semibold mb-4 ">Please confirm the details of the uploaded file.</h2>
+        
+        <label class="block text-sm mb-2">File name:</label>
+        <input id="fileName" type="text" class="w-full border px-2 py-1 rounded mb-4" />
+        
+        <label>Group</label>
+        <input>
+        <div class="flex justify-end gap-4">
+          <button id="cancelUploadBtn" class="px-4 py-2 bg-gray-400 hover:bg-gray-500 rounded">Cancel</button>
+          <button id="confirmUploadBtn" class="px-4 py-2 bg-sky-600 hover:bg-blue-700 rounded">Send</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  <script type= "module" src="js/dashboard.js"></script>
 
 </body>
 </html>

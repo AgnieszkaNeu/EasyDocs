@@ -6,4 +6,36 @@
 body {
     background-color: #18181b;
     font-family: monospace;
+    background-size: 100% 100%;
+    background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+    background-image: radial-gradient(49% 81% at 45% 47%, #31555745 0%, #073AFF00 100%),radial-gradient(113% 91% at 17% -2%, #153523FF 1%, #FF000000 99%),radial-gradient(142% 91% at 83% 7%, #0B2B4BFF 1%, #FF000000 99%),radial-gradient(142% 91% at -6% 74%, #0A170FFF 1%, #21413100 99%),radial-gradient(142% 91% at 111% 84%, #000000FF 0%, #000000FF 100%);
+}
+
+.dropzone{
+  width: 98%;
+  padding: 2rem;
+  border: 2px dashed #3498db;
+  border-radius: 5px;
+  transition: .2s;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #f44336;
+  color: white;
+  padding: 18px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 9999;
+}
+
+.toast.show {
+  opacity: 1;
+  pointer-events: auto;
 }
