@@ -11,15 +11,24 @@ EasyDocs is a REST API for a document management system built using Java and Spr
 
 ## Technologies
 
+### Backend
 - Java 17
-- Spring Boot 3.4.1
-- Spring Web
-- Spring Data JPA
-- Spring Security
-- H2 (embedded data base)
+- Spring Boot
+  - Spring Web
+  - Spring Data JPA
+  - Spring Security
+- H2 - embedded data base
 - Maven
-- PostgreSQL (target production database)
-  
+- PostgreSQL - target production database
+
+### Frontend
+- JavaScript
+- HTML/CSS
+- Tailwind CSS, DaisyUI
+- Vite – development build tool
+- pdf.js – for PDF rendering
+- Dropzone.js – for file uploads
+
 ## Requirements
 
 Before running, make sure you have it installed:
@@ -42,10 +51,6 @@ Before running, make sure you have it installed:
    ```sh
    mvn spring-boot:run
    ```
-   
-## Authentication & Authorization
-EasyDocs uses JWT (JSON Web Token) for authentication.
-To access protected endpoints, obtain a token by logging in via /auth/login and include it in requests using the Authorization: Bearer <TOKEN> header.
 
 ## Available endpoints
 
