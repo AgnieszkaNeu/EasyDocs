@@ -8,6 +8,7 @@ document.getElementById("signin").addEventListener("click", function(e) {
     document.getElementById("email-label").hidden = false;
     document.getElementById("password-label").hidden = false;
 
+    console.log(password)
     console.log(email)
 
     let login = true
@@ -32,12 +33,11 @@ document.getElementById("signin").addEventListener("click", function(e) {
                 password: password
               })
         }).then(response => {
-            console.log(response)
             if(response.ok){
                 window.location.href = "dashboard.html";
             }
-            if(response.status === 403) {
-                document.getElementById("incorrect-credentials").removeAttribute("hidden");
+            else{
+                document.getElementById("invalid-credentials").removeAttribute("hidden");
                 //document.getElementById("password-div").classList.replace("mb-4", "mb-1");
                 //document.getElementById("password").classList.add("is-invalid");
                 //document.getElementById("username").classList.add("is-invalid");
