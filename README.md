@@ -29,29 +29,6 @@ EasyDocs is a REST API for a document management system built using Java and Spr
 - pdf.js – for PDF rendering
 - Dropzone.js – for file uploads
 
-## Requirements
-
-Before running, make sure you have it installed:
-
-- **Java 17** or newer (`java -version`)
-- **Maven** (`mvn -version`)
-
-## Run the application locally
-
-1. **Clone repository**
-   ```sh
-   git clone https://github.com/AgnieszkaNeu/EasyDocs.git
-   cd EasyDocs
-   ```
-2. **Build app**
-   ```sh
-   mvn clean install
-   ```
-3. **Run app**
-   ```sh
-   mvn spring-boot:run
-   ```
-
 ## Available endpoints
 
 ### Users (/user)
